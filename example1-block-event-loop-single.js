@@ -4,7 +4,7 @@ function blockEventLoop() {
   const startTime = Date.now();
   while (Date.now() - startTime < 5000) {
     // Simulate a blocking operation
-    // This loop will block the event loop for 1 second
+    // This loop will block the event loop for 5 seconds
     // In a real-world scenario, this could be a synchronous file read or CPU-intensive computation
     // fs.readFileSync("large-file.txt");
   }
@@ -14,8 +14,12 @@ function blockEventLoop() {
 // Non-blocking operation
 function nonBlockingOperation() {
   console.log("Performing a non-blocking operation...");
+  const startLatencyTime = Date.now();
   setTimeout(() => {
-    console.log("Non-blocking operation completed.");
+    const endLatencyTime = Date.now() - startLatencyTime;
+    console.log(
+      `Non-blocking operation completed. Duration: ${endLatencyTime} ms`
+    );
   }, 1000);
 }
 
