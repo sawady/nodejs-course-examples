@@ -4,7 +4,7 @@ import fs from "fs";
 const app = express();
 const port = 3000;
 
-// Count values in one CSV file
+// Count rows in one CSV file
 async function countRowsStream(file) {
   return new Promise((resolve, reject) => {
     let count = 0;
@@ -22,7 +22,7 @@ async function countRowsStream(file) {
 }
 
 // Express route
-app.get("/count-values/:file", async (req, res) => {
+app.get("/count-rows/:file", async (req, res) => {
   const startTime = Date.now();
   try {
     const count = await countRowsStream(`${req.params.file}.csv`);
@@ -34,7 +34,7 @@ app.get("/count-values/:file", async (req, res) => {
     });
   } catch (err) {
     console.error("Error:", err);
-    res.status(500).json({ error: "Failed to count values" });
+    res.status(500).json({ error: "Failed to count rows" });
   }
 });
 

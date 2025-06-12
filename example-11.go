@@ -21,7 +21,7 @@ func countCsvRowsSync(file string) (int, error) {
 	return countRows(string(data)), nil
 }
 
-func countValuesHandler(w http.ResponseWriter, r *http.Request) {
+func countRowsHandler(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 
 	total, err := countCsvRowsSync(r.PathValue("file") + ".csv")
@@ -37,7 +37,7 @@ func countValuesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/count-values/{file}", countValuesHandler)
+	http.HandleFunc("/count-rows/{file}", countRowsHandler)
 
 	port := 3000
 	fmt.Printf("Server running at http://localhost:%d\n", port)

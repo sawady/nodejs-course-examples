@@ -9,25 +9,25 @@ function countRows(data) {
   return matches?.length || 0;
 }
 
-const countCsvValuesSync = (file) => {
+const countRowsSync = (file) => {
   const data = fs.readFileSync(file, "utf8");
   return countRows(data);
 };
 
 // Express route
-app.get("/count-values/:file", async (req, res) => {
+app.get("/count-rows/:file", async (req, res) => {
   const startTime = Date.now();
   try {
-    const total = countCsvValuesSync(`${req.params.file}.csv`);
+    const total = countRowsSync(`${req.params.file}.csv`);
 
     const elapsed = Date.now() - startTime;
 
     res.json({
-      totalValues: total,
+      rows: total,
       elapsedMs: elapsed,
     });
   } catch (err) {
-    console.error("Error counting values:", err);
+    console.error("Error counting rows:", err);
     res.status(500).json({ error: "Failed to process files" });
   }
 });

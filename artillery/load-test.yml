@@ -6,4 +6,4 @@ config:
 scenarios:
   - flow:
       - get:
-          url: "/count-values/1mb"
+          url: "/count-rows/1mb"
