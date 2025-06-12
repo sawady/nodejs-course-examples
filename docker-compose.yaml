@@ -1,21 +1,36 @@
 services:
-  db:
-    image: postgres:latest
+  # add Node.js service with entrypoint example-9-express-server-async-count.js
+  nodejs-async:
+    image: node:latest
+    container_name: nodejs-async
+    working_dir: /usr/src/app
     ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: nodejs_course
+      - "3000:3000"
+    entrypoint: ["node", "example-9-express-server-async-count.js"]
+    cpus: 1.0
     volumes:
-      - db_data:/var/lib/postgresql/data
-  redis:
-    image: redis:latest
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
+      - .:/usr/src/app
 
-volumes:
-  db_data:
-  redis_data:
+  # add Node.js service with entrypoint example-10-express-server-sync.js
+  nodejs-sync:
+    image: node:latest
+    container_name: nodejs-sync
+    working_dir: /usr/src/app
+    ports:
+      - "3001:3000"
+    entrypoint: ["node", "example-10-express-server-sync.js"]
+    cpus: 1.0
+    volumes:
+      - .:/usr/src/app
+
+  go-async:
+    # limit to 1 core only
+    image: golang:latest
+    container_name: go-async
+    working_dir: /usr/src/app
+    ports:
+      - "3002:3000"
+    entrypoint: ["go", "run", "example-11.go"]
+    cpus: 1.0 # This limits the service to one CPU core
+    volumes:
+      - .:/usr/src/app
