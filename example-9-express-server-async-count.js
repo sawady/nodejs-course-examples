@@ -5,7 +5,7 @@ const app = express();
 const port = 3000;
 
 // Count rows in one CSV file
-async function countRowsStream(file) {
+function countRowsStream(file) {
   return new Promise((resolve, reject) => {
     let count = 0;
     fs.createReadStream(file, { encoding: "utf8" })

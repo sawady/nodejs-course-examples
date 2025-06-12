@@ -3,15 +3,15 @@ import pLimit from "p-limit";
 
 const limit = pLimit(20); // Limit concurrency to 64 at a time
 
-function countValues(data) {
-  const matches = data.match(/[,\n]/g);
-  return (matches?.length || 0) + 1;
+function countRows(data) {
+  const matches = data.match(/\n/g);
+  return matches?.length || 0;
 }
 
 const operation = async (file) => {
   const startTime = Date.now();
   const data = await fs.readFile(file, "utf8");
-  const n = countValues(data);
+  const n = countRows(data);
   const elapsed = Date.now() - startTime;
   console.log(`Read ${n} values in ${elapsed} ms`);
   return n;
@@ -22,7 +22,7 @@ async function main() {
   console.log("Starting...");
   const promises = [];
   for (let i = 0; i < 1000; i++) {
-    promises.push(limit(() => operation("1mb.csv")));
+    promises.push(limit(() => operation("10mb.csv")));
   }
   console.log("Running Promise.all with limited concurrency...");
   const results = await Promise.all(promises);

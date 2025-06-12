@@ -2,19 +2,20 @@ import fs from "fs";
 import csv from "csv-parser";
 import pLimit from "p-limit";
 
-const limit = pLimit(20); // Limit concurrency to 64 at a time
+const limit = pLimit(20); // Limit concurrency to 20 at a time
 
-async function countCsvValuesStream(file) {
+async function countRowsStream(file) {
   return new Promise((resolve, reject) => {
     let count = 0;
-    fs.createReadStream(file)
-      .pipe(csv())
-      .on("data", (row) => {
-        count += Object.keys(row).length;
+    fs.createReadStream(file, { encoding: "utf8" })
+      .on("data", (chunk) => {
+        for (let i = 0; i < chunk.length; ++i) {
+          if (chunk[i] === "\n") {
+            count++;
+          }
+        }
       })
-      .on("end", () => {
-        resolve(count);
-      })
+      .on("end", () => resolve(count))
       .on("error", reject);
   });
 }
@@ -24,7 +25,7 @@ async function main() {
   console.log("Starting...");
   const promises = [];
   for (let i = 0; i < 1000; i++) {
-    promises.push(limit(() => countCsvValuesStream("1mb.csv")));
+    promises.push(limit(() => countRowsStream("10mb.csv")));
   }
   console.log("Running Promise.all with limited concurrency...");
   const results = await Promise.all(promises);
